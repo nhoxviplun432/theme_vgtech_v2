@@ -33,6 +33,7 @@ final class Assets
         add_action('wp_enqueue_scripts', [$this, 'enqueueFrontend']);
         add_action('admin_enqueue_scripts', [$this, 'enqueueAdmin']);
         add_filter('script_loader_tag', [$this, 'handleScriptAttributes'], 10, 3);
+        add_filter('style_loader_tag', [$this, 'handleStylePreload'], 10, 2);
     }
 
     /**
@@ -40,30 +41,48 @@ final class Assets
      */
     public function enqueueFrontend(): void
     {
+        $manifestPath = $this->themePath . 'public/build/manifest.json';
+
+        if (!file_exists($manifestPath)) {
+            return;
+        }
+
+        $manifest = json_decode(file_get_contents($manifestPath), true);
+
+        $entry = $manifest['resources/assets/js/app.js'] ?? null;
+
+        if (!$entry) {
+            return;
+        }
+
         // CSS
-        $this->enqueueStyle(
-            'vgtech-style',
-            $this->asset('css/app.css')
-        );
+        if (!empty($entry['css'])) {
+            foreach ($entry['css'] as $css) {
+                wp_enqueue_style(
+                    'vgtech-style',
+                    $this->themeUrl . 'public/build/' . $css,
+                    [],
+                    null
+                );
+            }
+        }
 
         // JS
-        $this->enqueueScript(
+        wp_enqueue_script(
             'vgtech-app',
-            $this->asset('js/app.js'),
-            ['jquery'],
-            true,
-            [
-                'defer' => true,
-            ]
+            $this->themeUrl . 'public/build/' . $entry['file'],
+            [],
+            null,
+            true
         );
 
-        // Localize
         wp_localize_script('vgtech-app', 'VGTECH', [
             'ajaxUrl' => admin_url('admin-ajax.php'),
             'nonce'   => wp_create_nonce('vgtech_nonce'),
             'siteUrl' => home_url('/'),
         ]);
     }
+
 
     /**
      * Admin assets
@@ -157,17 +176,44 @@ final class Assets
      * Resolve asset path
      * Ưu tiên build (Vite / Webpack) → fallback assets
      */
-    protected function asset(string $path): string
+   protected function asset(string $path): string
     {
         $path = ltrim($path, '/');
 
-        // build/
-        $buildFile = $this->themePath . 'public/build/' . $path;
-        if (file_exists($buildFile)) {
-            return $this->themeUrl . 'public/build/' . $path;
+        $buildPath = $this->themePath . 'public/build/' . $path;
+
+        if (file_exists($buildPath)) {
+            return add_query_arg(
+                'ver',
+                filemtime($buildPath),
+                $this->themeUrl . 'public/build/' . $path
+            );
         }
 
-        // assets/
-        return $this->themeUrl . 'public/assets/' . $path;
+        $fallbackPath = $this->themePath . 'public/assets/' . $path;
+
+        if (file_exists($fallbackPath)) {
+            return add_query_arg(
+                'ver',
+                filemtime($fallbackPath),
+                $this->themeUrl . 'public/assets/' . $path
+            );
+        }
+
+        return '';
     }
+
+    public function handleStylePreload(string $html, string $handle): string
+    {
+        if ($handle === 'vgtech-style') {
+            return str_replace(
+                "rel='stylesheet'",
+                "rel='preload' as='style' onload=\"this.rel='stylesheet'\"",
+                $html
+            );
+        }
+
+        return $html;
+    }
+
 }

@@ -1,0 +1,11 @@
+{
+  "resources/assets/js/app.js": {
+    "file": "assets/app-T8V-CgEJ.js",
+    "name": "app",
+    "src": "resources/assets/js/app.js",
+    "isEntry": true,
+    "css": [
+      "assets/app-DC3m_mC-.css"
+    ]
+  }
+}

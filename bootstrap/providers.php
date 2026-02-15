@@ -1,4 +1,5 @@
 <?php
 return [
-    // \App\Providers\AiServiceProvider::class,
+    Vgtech\ThemeVgtech\Providers\AdminLockServiceProvider::class,
+
 ];
