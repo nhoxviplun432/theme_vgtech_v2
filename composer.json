@@ -1,0 +1,16 @@
+{
+    "name": "vgtech/theme-vgtech",
+    "type": "wordpress-theme",
+    "require": {
+        "php": ">=8.0"
+    },
+    "autoload": {
+        "psr-4": {
+            "VGTech\\": "app/"
+        }
+    },
+    "config": {
+        "optimize-autoloader": true,
+        "sort-packages": true
+    }
+}

@@ -1,0 +1,72 @@
+theme-vgtech/
+│
+├── app/                        # Toàn bộ PHP logic (autoload)
+│   ├── Core/                   # Hạt nhân theme
+│   │   ├── Application.php     # App container, boot theme
+│   │   ├── ServiceProvider.php # Base provider
+│   │   ├── Router.php          # REST / AJAX routing
+│   │   ├── Assets.php          # Enqueue CSS/JS
+│   │   └── View.php            # View loader
+│   │
+│   ├── Modules/                # Module theo chức năng
+│   │   ├── Seo/
+│   │   │   ├── SeoService.php
+│   │   │   └── SeoSchema.php
+│   │   │
+│   │   ├── Ai/
+│   │   │   ├── AiController.php
+│   │   │   ├── AiService.php
+│   │   │   └── AiRepository.php
+│   │   │
+│   │   ├── Ads/
+│   │   └── HumanDesign/
+│   │
+│   ├── Services/               # Business logic thuần
+│   │   ├── CacheService.php
+│   │   ├── SeoService.php
+│   │   └── PerformanceService.php
+│   │
+│   ├── Support/                # Helper, Utils
+│   │   ├── Arr.php
+│   │   ├── Str.php
+│   │   └── Html.php
+│   │
+│   ├── Contracts/              # Interface
+│   │   ├── ModuleInterface.php
+│   │   ├── ServiceInterface.php
+│   │   └── RepositoryInterface.php
+│   │
+│   └── Providers/              # Register module/service
+│       ├── AppServiceProvider.php
+│       ├── SeoServiceProvider.php
+│       └── AiServiceProvider.php
+│
+├── resources/                  # Frontend source
+│   ├── views/                  # Template PHP (render)
+│   │   ├── layouts/
+│   │   ├── partials/
+│   │   └── pages/
+│   │
+│   ├── components/             # Blade-like components (PHP)
+│   │   ├── button.php
+│   │   └── card.php
+│   │
+│   └── assets/                 # Source assets (Vite)
+│       ├── js/
+│       ├── css/
+│       └── images/
+│
+├── public/                     # Build output
+│   ├── build/                  # Vite output
+│   └── assets/                 # Static fallback
+│
+├── bootstrap/
+│   ├── app.php                 # Khởi tạo Application
+│   └── providers.php           # Danh sách provider
+│
+├── vendor/                     # Composer
+│
+├── composer.json
+├── functions.php               # Bridge WordPress ↔ App
+├── index.php
+└── style.css                   # Header theme WP
