@@ -1,8 +1,8 @@
 <?php
 
-namespace Vgtech\ThemeVgtech\Providers;
+namespace VGTech\Providers;
 
-use Vgtech\ThemeVgtech\Core\ServiceProvider;
+use VGTech\Core\ServiceProvider;
 
 class AdminLockServiceProvider extends ServiceProvider
 {
@@ -35,6 +35,7 @@ class AdminLockServiceProvider extends ServiceProvider
     public function blockDirectAccess(): void
     {
         global $pagenow;
+        var_dump($pagenow);
 
         if ($pagenow === 'post-new.php' && ($_GET['post_type'] ?? '') === 'page') {
             wp_die('Page creation is disabled.');

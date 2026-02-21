@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Core;
+namespace VGTech\Core;
 
 defined('ABSPATH') || exit;
 
@@ -46,5 +46,31 @@ class Router
         if ($public) {
             add_action("wp_ajax_nopriv_{$action}", $callback);
         }
+    }
+
+    public function handle(): void
+    {
+        if (is_admin()) {
+            return;
+        }
+
+        if (is_front_page()) {
+            app()->make('view')->render('pages/home');
+            exit;
+        }
+
+        if (is_single()) {
+            app()->make('view')->render('pages/single');
+            exit;
+        }
+
+        if (is_archive()) {
+            app()->make('view')->render('pages/archive');
+            exit;
+        }
+
+        // fallback
+        app()->make('view')->render('pages/404');
+        exit;
     }
 }

@@ -46,8 +46,11 @@ final class Application
      */
     public function boot(): void
     {
-        $this->registerProviders();
-        $this->bootProviders();
+         $this->registerProviders();
+
+        add_action('after_setup_theme', function () {
+            $this->bootProviders();
+        }, 0);
         $this->registerHooks();
     }
 
@@ -57,7 +60,6 @@ final class Application
     protected function registerProviders(): void
     {
         $providers = require get_template_directory() . '/bootstrap/providers.php';
-
         foreach ($providers as $providerClass) {
             if (class_exists($providerClass)) {
                 $provider = new $providerClass($this);
@@ -110,7 +112,9 @@ final class Application
      */
     public function init(): void
     {
-        // dành cho Router, CPT, Taxonomy
+        add_action('template_redirect', function () {
+            (new Router())->handle();
+        });
     }
 
     /* ===========================
@@ -125,6 +129,12 @@ final class Application
 
     public function make(string $key): mixed
     {
-        return $this->container[$key] ?? null;
-    }
+        if (!isset($this->container[$key])) {
+            return null;
+        }
+
+        return is_callable($this->container[$key])
+            ? call_user_func($this->container[$key])
+            : $this->container[$key];
+        }
 }

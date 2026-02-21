@@ -13,7 +13,6 @@ global $post;
     <?php endif; ?>
 
     <meta name="description" content="<?= esc_attr(get_bloginfo('description')); ?>">
-    <meta name="author" content="<?= esc_attr(get_bloginfo('name')); ?>">
 
     <meta property="og:title" content="<?= esc_attr(wp_get_document_title()); ?>">
     <meta property="og:description" content="<?= esc_attr(get_bloginfo('description')); ?>">
@@ -26,6 +25,5 @@ global $post;
     <meta name="twitter:description" content="<?= esc_attr(get_bloginfo('description')); ?>">
 
     <link rel="canonical" href="<?= esc_url(home_url(add_query_arg([], $_SERVER['REQUEST_URI']))); ?>">
-
     <?php wp_head(); ?>
 </head>

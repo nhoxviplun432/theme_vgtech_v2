@@ -34,4 +34,7 @@ require_once $autoload;
 /**
  * Bootstrap Application
  */
-return Application::getInstance();
+$app = Application::getInstance();
+$app->boot();
+
+return $app;
